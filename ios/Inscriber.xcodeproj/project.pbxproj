@@ -12,6 +12,7 @@
 		894CBB5529B3826800EBD6DD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 894CBB5429B3826800EBD6DD /* Preview Assets.xcassets */; };
 		894CBB5C29B3843300EBD6DD /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB5B29B3843300EBD6DD /* DrawingView.swift */; };
 		894CBB5F29B38BB600EBD6DD /* PKCanvasRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB5E29B38BB600EBD6DD /* PKCanvasRepresentation.swift */; };
+		894CBB6329B4A9F500EBD6DD /* UndoRedoObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB6229B4A9F500EBD6DD /* UndoRedoObserver.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		894CBB5429B3826800EBD6DD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		894CBB5B29B3843300EBD6DD /* DrawingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
 		894CBB5E29B38BB600EBD6DD /* PKCanvasRepresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKCanvasRepresentation.swift; sourceTree = "<group>"; };
+		894CBB6229B4A9F500EBD6DD /* UndoRedoObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoRedoObserver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,10 +74,27 @@
 		894CBB5D29B38BA700EBD6DD /* Drawing */ = {
 			isa = PBXGroup;
 			children = (
+				894CBB6529B4AE5800EBD6DD /* View */,
+				894CBB6429B4AE5000EBD6DD /* Model */,
+			);
+			path = Drawing;
+			sourceTree = "<group>";
+		};
+		894CBB6429B4AE5000EBD6DD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				894CBB6229B4A9F500EBD6DD /* UndoRedoObserver.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		894CBB6529B4AE5800EBD6DD /* View */ = {
+			isa = PBXGroup;
+			children = (
 				894CBB5B29B3843300EBD6DD /* DrawingView.swift */,
 				894CBB5E29B38BB600EBD6DD /* PKCanvasRepresentation.swift */,
 			);
-			path = Drawing;
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -149,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				894CBB5C29B3843300EBD6DD /* DrawingView.swift in Sources */,
+				894CBB6329B4A9F500EBD6DD /* UndoRedoObserver.swift in Sources */,
 				894CBB5F29B38BB600EBD6DD /* PKCanvasRepresentation.swift in Sources */,
 				894CBB4E29B3826800EBD6DD /* InscriberApp.swift in Sources */,
 			);

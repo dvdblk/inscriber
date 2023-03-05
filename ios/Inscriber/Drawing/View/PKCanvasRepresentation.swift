@@ -12,6 +12,14 @@ struct PKCanvasRepresentation: UIViewRepresentable {
     let canvasView = PKCanvasView()
     let toolPicker = PKToolPicker()
     
+    @Binding var canUndo: Bool
+    @Binding var canRedo: Bool
+    
+    init(canUndo: Binding<Bool>, canRedo: Binding<Bool>) {
+        self._canUndo = canUndo
+        self._canRedo = canRedo
+    }
+    
     func makeUIView(context: Context) -> some UIView {
         canvasView.delegate = context.coordinator
         return canvasView
@@ -31,13 +39,23 @@ struct PKCanvasRepresentation: UIViewRepresentable {
     
     class Coordinator: NSObject, PKCanvasViewDelegate {
         var parent: PKCanvasRepresentation
+        var prevStrokesCount = 0
         
         init(_ parent: PKCanvasRepresentation) {
             self.parent = parent
         }
         
         func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
-            print("canvasViewDrawingDidChange")
+            // Update undo / redo buttons after every drawing change
+            if let undoManager = canvasView.undoManager {
+                let strokes = canvasView.drawing.strokes
+                parent.canUndo = undoManager.canUndo && !strokes.isEmpty
+                parent.canRedo = undoManager.canRedo
+            }
+        }
+        
+        func canvasViewDidEndUsingTool(_ canvasView: PKCanvasView) {
+            
         }
     }
 }
