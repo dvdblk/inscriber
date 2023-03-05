@@ -41,6 +41,10 @@ struct DrawingView: View {
                 }
                 .disabled(!undoRedoObserver.canRedo)
             }
+            ToolbarItem(placement: .principal) {
+                Text("Inscriber")
+                    .font(.custom("Noteworthy", size: 24, relativeTo: .headline).weight(.semibold))
+            }
             ToolbarItem(placement: .confirmationAction) {
                 Menu {
                     Picker("Prediction Model", selection: $predictionModel) {

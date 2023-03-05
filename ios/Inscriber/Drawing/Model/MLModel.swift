@@ -9,7 +9,8 @@ import Foundation
 
 /// Type of the MLModel currently used in the app
 enum MLModel: String, CaseIterable, Identifiable {
-    case turicreateBaseline = "Baseline Turicreate"
+    case turicreateBaseline = "Turicreate (Baseline)"
+    case turicreateCustom = "Turicreate (Custom)"
     case other = "Other"
     
     var id: MLModel { self }
