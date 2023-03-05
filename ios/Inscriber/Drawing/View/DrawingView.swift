@@ -10,6 +10,7 @@ import SwiftUI
 struct DrawingView: View {
     @Environment(\.undoManager) var undoManager
     @ObservedObject private var undoRedoObserver = UndoRedoObserver()
+    @State private var predictionModel = MLModel.turicreateBaseline
     
     var body: some View {
         VStack {
@@ -40,7 +41,20 @@ struct DrawingView: View {
                 }
                 .disabled(!undoRedoObserver.canRedo)
             }
+            ToolbarItem(placement: .confirmationAction) {
+                Menu {
+                    Picker("Prediction Model", selection: $predictionModel) {
+                        ForEach(MLModel.allCases) { model in
+                            Text(model.rawValue).tag(model)
+                        }
+                    }
+                    .pickerStyle(.inline)
+                } label: {
+                    Label("Settings", systemImage: "brain")
+                }
+            }
         }
+        .tint(.pink)
     }
 }
 
