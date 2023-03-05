@@ -22,7 +22,7 @@ metrics = model.evaluate(test_data)
 print(metrics["accuracy"])
 
 # Save the model for later use in Turi Create
-model.save(models_dir / "square_triangle.model")
+model.save(str(models_dir / "square_triangle.model"))
 
 # Export for use in Core ML
-model.export_coreml(models_dir / "MySquareTriangleClassifier.mlmodel")
+model.export_coreml(str(models_dir / "MySquareTriangleClassifier.mlmodel"))
