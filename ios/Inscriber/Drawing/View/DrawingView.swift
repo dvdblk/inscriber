@@ -9,15 +9,20 @@ import SwiftUI
 
 struct DrawingView: View {
     @Environment(\.undoManager) var undoManager
-    @ObservedObject private var undoRedoObserver = UndoRedoObserver()
-    @State private var predictionModel = MLModel.turicreateBaseline
+    @StateObject private var undoRedoObserver = UndoRedoObserver()
+    @StateObject private var predictionModel = MLModel()
     
     var body: some View {
         VStack {
             PKCanvasRepresentation(
                 canUndo: $undoRedoObserver.canUndo,
                 canRedo: $undoRedoObserver.canRedo
-            )
+            ) { drawing in
+                // 1. Predict
+                //predictionModel.predict()
+                
+                // 2. Update drawing based on prediction
+            }
         }
         .onAppear {
             undoRedoObserver.undoManager = undoManager
@@ -47,8 +52,8 @@ struct DrawingView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Menu {
-                    Picker("Prediction Model", selection: $predictionModel) {
-                        ForEach(MLModel.allCases) { model in
+                    Picker("Prediction Model", selection: $predictionModel.modelType) {
+                        ForEach(MLModel.ModelType.allCases) { model in
                             Text(model.rawValue).tag(model)
                         }
                     }

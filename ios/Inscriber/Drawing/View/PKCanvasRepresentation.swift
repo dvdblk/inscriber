@@ -11,17 +11,25 @@ import PencilKit
 struct PKCanvasRepresentation: UIViewRepresentable {
     let canvasView = CustomCanvasView()
     let toolPicker = PKToolPicker()
+    let strokeChangedAction: ((PKDrawing) -> Void)
     
     @Binding var canUndo: Bool
     @Binding var canRedo: Bool
     
-    init(canUndo: Binding<Bool>, canRedo: Binding<Bool>) {
+    init(canUndo: Binding<Bool>, canRedo: Binding<Bool>, strokeChangedAction: @escaping ((PKDrawing) -> Void)) {
         self._canUndo = canUndo
         self._canRedo = canRedo
+        self.strokeChangedAction = strokeChangedAction
     }
     
     func makeUIView(context: Context) -> some UIView {
         canvasView.delegate = context.coordinator
+        canvasView.onTouchesMoved = {
+            strokeChangedAction(canvasView.drawing)
+
+            //print(canvasView.)
+            // FIXME: collect PKStroke in canvasView touchesMoved
+        }
         return canvasView
     }
     
@@ -54,8 +62,8 @@ struct PKCanvasRepresentation: UIViewRepresentable {
             }
         }
         
-        func canvasViewDidEndUsingTool(_ canvasView: PKCanvasView) {
-            
+        func canvasViewDidFinishRendering(_ canvasView: PKCanvasView) {
+            print("canvasViewDidFinishRendering")
         }
     }
 }
