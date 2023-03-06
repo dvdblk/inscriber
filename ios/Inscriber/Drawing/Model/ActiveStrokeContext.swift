@@ -9,7 +9,7 @@ import UIKit
 import PencilKit
 
 /// Represents the currently active `PKStroke` by an array of captured points (`[PKStrokePoint]`) and the state of drawing this stroke.
-class ActiveStrokeContext: ObservableObject {
+class ActiveStrokeContext {
     
     // MARK: - Stroke State
     /// State of a stroke context. The user can be actively drawing or about to finish a drawing.
@@ -22,17 +22,28 @@ class ActiveStrokeContext: ObservableObject {
         //case presentedAlternative
     }
     
-    @Published var state: State = .drawing {
+    var state: State = .drawing {
         didSet {
-            print(state == .drawing ? "drawing" : "finishing")
+            switch (oldValue, state) {
+            case (.drawing, .finishing):
+                strokeFinishingAction?(stroke)
+            case (.finishing, .drawing):
+                strokeContinueDrawingAction?()
+            case (.drawing, .drawing), (.finishing, .finishing):
+                // ignore
+                break
+            }
         }
     }
     
     /// Used to change the state based on user's intention. Whenever the user doesn't leave a certain vicinity for some amount of time / pkstrokepoints
     /// the state changes to .finishing
-    var drawingTimeoutTimer: Timer?
+    private var drawingTimeoutTimer: Timer?
     /// The index of a `PKStrokePoint` that was tagged as the point around which to calculate the finishing vicinity of the stroke.
     private var drawingTimeoutReferencePointIndex: Int?
+    
+    var strokeFinishingAction: ((PKStroke) -> Void)?
+    var strokeContinueDrawingAction: (() -> Void)?
     
     // MARK: - Constants
     /// The timeout before a timer considers to change the stroke state

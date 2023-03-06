@@ -19,11 +19,10 @@ class CustomCanvasView: PKCanvasView {
     }
     
     // MARK: - State
-    var activeStrokeContext: ActiveStrokeContext?
+    var activeStrokeContext: ActiveStrokeContext? { didSet { activeStrokeContextChangedAction?(activeStrokeContext) } }
     
     // MARK: - Callback
-    /// Action that's called whenever a touch move significantly
-    var onTouchesMoved: (() -> Void)?
+    var activeStrokeContextChangedAction: ((ActiveStrokeContext?) -> Void)?
     
     // MARK: - Touch handling methods
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -38,15 +37,6 @@ class CustomCanvasView: PKCanvasView {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
         activeStrokeContext?.append(touches: touches, view: self, event: event)
-        
-        guard let touch = touches.first else { return }
-        let previousLocation = touch.precisePreviousLocation(in: self)
-        let location = touch.preciseLocation(in: self)
-
-        // Only call the action on touches that move at least 1 pt
-        if previousLocation.distance(to: location) >= 1 {
-            onTouchesMoved?()
-        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8905FC2F29B5FF7400EFA6EE /* MySquareTriangleClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8905FC2E29B5FF7300EFA6EE /* MySquareTriangleClassifier.mlmodel */; };
 		8905FC3229B63ACA00EFA6EE /* ActiveStrokeContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8905FC3129B63ACA00EFA6EE /* ActiveStrokeContext.swift */; };
+		8905FC3429B6720100EFA6EE /* ShapeDrawingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8905FC3329B6720100EFA6EE /* ShapeDrawingManager.swift */; };
 		894CBB4E29B3826800EBD6DD /* InscriberApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB4D29B3826800EBD6DD /* InscriberApp.swift */; };
 		894CBB5229B3826800EBD6DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 894CBB5129B3826800EBD6DD /* Assets.xcassets */; };
 		894CBB5529B3826800EBD6DD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 894CBB5429B3826800EBD6DD /* Preview Assets.xcassets */; };
@@ -28,6 +29,7 @@
 /* Begin PBXFileReference section */
 		8905FC2E29B5FF7300EFA6EE /* MySquareTriangleClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = MySquareTriangleClassifier.mlmodel; path = "../../../../ml/turicreate-cnn/models/MySquareTriangleClassifier.mlmodel"; sourceTree = "<group>"; };
 		8905FC3129B63ACA00EFA6EE /* ActiveStrokeContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveStrokeContext.swift; sourceTree = "<group>"; };
+		8905FC3329B6720100EFA6EE /* ShapeDrawingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeDrawingManager.swift; sourceTree = "<group>"; };
 		894CBB4A29B3826800EBD6DD /* Inscriber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inscriber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		894CBB4D29B3826800EBD6DD /* InscriberApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriberApp.swift; sourceTree = "<group>"; };
 		894CBB5129B3826800EBD6DD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				8905FC3129B63ACA00EFA6EE /* ActiveStrokeContext.swift */,
+				8905FC3329B6720100EFA6EE /* ShapeDrawingManager.swift */,
 				894CBB6229B4A9F500EBD6DD /* UndoRedoObserver.swift */,
 				894CBB6629B4EB7600EBD6DD /* Drawing.swift */,
 				894CBB7429B4FF5900EBD6DD /* RecognizedShape.swift */,
@@ -223,6 +226,7 @@
 			files = (
 				894CBB7329B4FB6900EBD6DD /* PredictionManager.swift in Sources */,
 				894CBB5C29B3843300EBD6DD /* DrawingView.swift in Sources */,
+				8905FC3429B6720100EFA6EE /* ShapeDrawingManager.swift in Sources */,
 				894CBB7729B4FF7900EBD6DD /* Prediction.swift in Sources */,
 				894CBB6329B4A9F500EBD6DD /* UndoRedoObserver.swift in Sources */,
 				894CBB7529B4FF5900EBD6DD /* RecognizedShape.swift in Sources */,

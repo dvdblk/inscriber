@@ -12,6 +12,7 @@ struct DrawingView: View {
     @State private var showingOptionsPopover = false
     @State private var drawWithTouch = !UIDevice.interfaceIsPad
     @State private var penWidth = PenWidth.normal
+    @State private var activeStrokeState = ActiveStrokeState.drawing
     @StateObject private var undoRedoObserver = UndoRedoObserver()
     @StateObject private var predictionManager = PredictionManager()
     
@@ -21,19 +22,9 @@ struct DrawingView: View {
                 canUndo: $undoRedoObserver.canUndo,
                 canRedo: $undoRedoObserver.canRedo,
                 drawWithTouch: $drawWithTouch,
-                penWidth: $penWidth
-            ) { canvasView in
-                // 1. Predict
-//                predictionManager.predict(
-//                    stroke: canvasView.stroke,
-//                    completion: { _ in
-//                        print("completed")
-//                    }
-//                )
-                
-                
-                // 2. Update drawing based on prediction
-            }
+                penWidth: $penWidth,
+                activeStrokeState: $activeStrokeState
+            )
         }
         .onAppear {
             undoRedoObserver.undoManager = undoManager
@@ -41,6 +32,20 @@ struct DrawingView: View {
         .onChange(of: undoManager) { newManager in
             // UndoManager can change during the lifecycle so we need to keep it updated in the observer
             undoRedoObserver.undoManager = newManager
+        }
+        .onChange(of: activeStrokeState) { newState in
+            switch newState {
+            case .drawing:
+                print("drawing")
+            case .awaitingPrediction(let stroke):
+                predictionManager.predict(stroke: stroke) { result in
+                    if self.activeStrokeState == .awaitingPrediction(stroke: stroke) {
+                        self.activeStrokeState = .predictedShape(prediction: result, forStroke: stroke)
+                    }
+                }
+            case .predictedShape(let prediction, let stroke):
+                print("Predicted \(prediction.recognizedShape) with confidence \(prediction.confidence) for last stroke.")
+            }
         }
         .toolbar {
             ToolbarItemGroup(placement: UIDevice.interfaceIsPad ? .cancellationAction : .bottomBar) {

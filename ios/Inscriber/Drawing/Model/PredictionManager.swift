@@ -35,11 +35,9 @@ class PredictionManager: ObservableObject {
         case .turicreateBaseline:
             let request = VNCoreMLRequest(model: turicreateBaselineModel, completionHandler: { [] request, error in
                 if let sortedResults = request.results! as? [VNClassificationObservation] {
-                    print("Results")
-                    for result in sortedResults {
-                        print(result.identifier, result.confidence)
+                    if let prediction = sortedResults.first {
+                        completion(Prediction(confidence: prediction.confidence, recognizedShape: RecognizedShape(rawValue: prediction.identifier)))
                     }
-                    print("------------------------------")
                 }
             })
             

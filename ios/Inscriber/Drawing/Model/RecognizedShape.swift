@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import PencilKit
 
 /// The types of shapes that the models are able to predict
-enum RecognizedShape: CaseIterable {
+enum RecognizedShape: String, Equatable, CaseIterable {
     case square
     case rectangle
     case circle
@@ -17,4 +18,16 @@ enum RecognizedShape: CaseIterable {
     case triangle
     
     /// TODO: arc, heart, speech bubble, star, pentagon
+}
+
+// MARK: - Drawing
+extension RecognizedShape {
+    func toStroke(from stroke: PKStroke) -> PKStroke {
+        switch self {
+        case .square:
+            return stroke
+        default:
+            return PKStroke(ink: stroke.ink, path: stroke.path, transform: CGAffineTransform.init(rotationAngle: 45))
+        }
+    }
 }

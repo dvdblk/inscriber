@@ -8,7 +8,7 @@
 import Foundation
 
 /// Describes a prediction from the ML Model
-struct Prediction {
+struct Prediction: Equatable {
     let confidence: Float
     let recognizedShape: RecognizedShape?
 }

@@ -8,20 +8,35 @@
 import SwiftUI
 import PencilKit
 
+enum ActiveStrokeState: Equatable {
+    /// Default state for the active stroke. Doesn't necessarily mean the user is actively drawing.
+    case drawing
+    /// Whenever the user pauses drawing without lifting finger / pencil and awaits a prediction for his current `stroke`
+    case awaitingPrediction(stroke: PKStroke)
+    /// When the ML model predicts a shape for a given stroke.
+    case predictedShape(prediction: Prediction, forStroke: PKStroke)
+}
+
+extension PKStroke: Equatable {
+    public static func == (lhs: PKStroke, rhs: PKStroke) -> Bool {
+        return true
+    }
+}
+
 struct PKCanvasRepresentation: UIViewRepresentable {
-    let strokeChangedAction: ((CustomCanvasView) -> Void)
     
     @Binding var canUndo: Bool
     @Binding var canRedo: Bool
     @Binding var drawWithTouch: Bool
     @Binding var penWidth: PenWidth
+    @Binding var activeStrokeState: ActiveStrokeState
     
-    init(canUndo: Binding<Bool>, canRedo: Binding<Bool>, drawWithTouch: Binding<Bool>, penWidth: Binding<PenWidth>, strokeChangedAction: @escaping ((CustomCanvasView) -> Void)) {
+    init(canUndo: Binding<Bool>, canRedo: Binding<Bool>, drawWithTouch: Binding<Bool>, penWidth: Binding<PenWidth>, activeStrokeState: Binding<ActiveStrokeState>) {
         self._canUndo = canUndo
         self._canRedo = canRedo
         self._drawWithTouch = drawWithTouch
         self._penWidth = penWidth
-        self.strokeChangedAction = strokeChangedAction
+        self._activeStrokeState = activeStrokeState
     }
     
     func makeDefaultTool(width: PenWidth) -> PKInkingTool {
@@ -33,8 +48,21 @@ struct PKCanvasRepresentation: UIViewRepresentable {
         canvasView.delegate = context.coordinator
         canvasView.drawingPolicy = drawWithTouch ? .anyInput : .pencilOnly
         canvasView.tool = makeDefaultTool(width: penWidth)
-        canvasView.onTouchesMoved = {
-            strokeChangedAction(canvasView)
+        canvasView.activeStrokeContextChangedAction = { strokeContext in
+            // If a new stroke drawing context has been created prepare the actions
+            if let strokeContext = strokeContext {
+                strokeContext.strokeFinishingAction = { finishingStroke in
+                    // On finishing, attempt to make a prediction
+                    self.activeStrokeState = .awaitingPrediction(stroke: finishingStroke)
+                }
+                strokeContext.strokeContinueDrawingAction = {
+                    // On continue drawing.. continue drawing
+                    self.activeStrokeState = .drawing
+                }
+            } else {
+                // On stroke context deinit, continue drawing (default state)
+                self.activeStrokeState = .drawing
+            }
         }
         return canvasView
     }
