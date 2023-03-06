@@ -9,24 +9,32 @@ import SwiftUI
 import PencilKit
 
 struct PKCanvasRepresentation: UIViewRepresentable {
-    let canvasView = CustomCanvasView()
-    let toolPicker = PKToolPicker()
     let strokeChangedAction: ((PKDrawing) -> Void)
     
     @Binding var canUndo: Bool
     @Binding var canRedo: Bool
+    @Binding var drawWithTouch: Bool
+    @Binding var penWidth: PenWidth
     
-    init(canUndo: Binding<Bool>, canRedo: Binding<Bool>, strokeChangedAction: @escaping ((PKDrawing) -> Void)) {
+    init(canUndo: Binding<Bool>, canRedo: Binding<Bool>, drawWithTouch: Binding<Bool>, penWidth: Binding<PenWidth>, strokeChangedAction: @escaping ((PKDrawing) -> Void)) {
         self._canUndo = canUndo
         self._canRedo = canRedo
+        self._drawWithTouch = drawWithTouch
+        self._penWidth = penWidth
         self.strokeChangedAction = strokeChangedAction
     }
     
-    func makeUIView(context: Context) -> some UIView {
+    func makeDefaultTool(width: PenWidth) -> PKInkingTool {
+        return PKInkingTool(.pen, color: PKInkingTool.convertColor(.white, from: .light, to: .dark), width: CGFloat(width.rawValue))
+    }
+    
+    func makeUIView(context: Context) -> CustomCanvasView {
+        let canvasView = CustomCanvasView()
         canvasView.delegate = context.coordinator
+        canvasView.drawingPolicy = drawWithTouch ? .anyInput : .pencilOnly
+        canvasView.tool = makeDefaultTool(width: penWidth)
         canvasView.onTouchesMoved = {
             strokeChangedAction(canvasView.drawing)
-
             //print(canvasView.)
             // FIXME: collect PKStroke in canvasView touchesMoved
         }
@@ -37,12 +45,9 @@ struct PKCanvasRepresentation: UIViewRepresentable {
         Coordinator(self)
     }
     
-    func updateUIView(_ uiView: UIViewType, context: Context) {
-        toolPicker.addObserver(canvasView)
-        toolPicker.setVisible(true, forFirstResponder: uiView)
-        DispatchQueue.main.async {
-            uiView.becomeFirstResponder()
-        }
+    func updateUIView(_ uiView: CustomCanvasView, context: Context) {
+        uiView.drawingPolicy = drawWithTouch ? .anyInput : .pencilOnly
+        uiView.tool = makeDefaultTool(width: penWidth)
     }
     
     class Coordinator: NSObject, PKCanvasViewDelegate {
@@ -60,10 +65,6 @@ struct PKCanvasRepresentation: UIViewRepresentable {
                 parent.canUndo = undoManager.canUndo && !strokes.isEmpty
                 parent.canRedo = undoManager.canRedo
             }
-        }
-        
-        func canvasViewDidFinishRendering(_ canvasView: PKCanvasView) {
-            print("canvasViewDidFinishRendering")
         }
     }
 }

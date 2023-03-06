@@ -13,6 +13,7 @@ struct InscriberApp: App {
         WindowGroup {
             NavigationStack {
                 DrawingView()
+                    .navigationBarTitleDisplayMode(.inline)
             }
         }
     }

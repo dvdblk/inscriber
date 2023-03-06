@@ -9,6 +9,9 @@ import SwiftUI
 
 struct DrawingView: View {
     @Environment(\.undoManager) var undoManager
+    @State private var showingOptionsPopover = false
+    @State private var drawWithTouch = !UIDevice.interfaceIsPad
+    @State private var penWidth = PenWidth.normal
     @StateObject private var undoRedoObserver = UndoRedoObserver()
     @StateObject private var predictionModel = MLModel()
     
@@ -16,7 +19,9 @@ struct DrawingView: View {
         VStack {
             PKCanvasRepresentation(
                 canUndo: $undoRedoObserver.canUndo,
-                canRedo: $undoRedoObserver.canRedo
+                canRedo: $undoRedoObserver.canRedo,
+                drawWithTouch: $drawWithTouch,
+                penWidth: $penWidth
             ) { drawing in
                 // 1. Predict
                 //predictionModel.predict()
@@ -32,7 +37,7 @@ struct DrawingView: View {
             undoRedoObserver.undoManager = newManager
         }
         .toolbar {
-            ToolbarItemGroup(placement: .cancellationAction) {
+            ToolbarItemGroup(placement: UIDevice.interfaceIsPad ? .cancellationAction : .bottomBar) {
                 Button {
                     undoManager?.undo()
                 } label: {
@@ -45,6 +50,42 @@ struct DrawingView: View {
                     Label("Redo", systemImage: "arrow.uturn.forward.circle")
                 }
                 .disabled(!undoRedoObserver.canRedo)
+                Spacer()
+                    .frame(minWidth: 16)
+                Button {
+                    showingOptionsPopover = true
+                } label: {
+                    Label("Options", systemImage: "ellipsis.circle")
+                }
+                .popover(isPresented: $showingOptionsPopover) {
+                    List {
+                        if UIDevice.interfaceIsPad {
+                            HStack(spacing: 8) {
+                                Text("Draw with Touch")
+                                Spacer()
+                                Toggle("", isOn: $drawWithTouch)
+                                    .labelsHidden()
+                            }
+                        }
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Pen Width")
+                            
+                            Picker("Pen Width", selection: $penWidth) {
+                                ForEach(PenWidth.allCases) { width in
+                                    Text("\(width.rawValue)")
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                        Section(header: Text("App")) {
+                            Text("Version")
+                                .badge(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown")
+                        }
+                    }
+                    .scrollDisabled(true)
+                    .frame(minWidth: 280, minHeight: 280)
+                }
+                .presentationDetents([.medium, .large])
             }
             ToolbarItem(placement: .principal) {
                 Text("Inscriber")
@@ -71,14 +112,17 @@ struct DrawingView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             DrawingView()
+                .navigationBarTitleDisplayMode(.inline)
         }
             .previewDevice(PreviewDevice(rawValue: "iPad Pro (11-inch) (4th generation)"))
             .previewDisplayName("iPad")
         
         NavigationStack {
             DrawingView()
+                .navigationBarTitleDisplayMode(.inline)
         }
             .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
             .previewDisplayName("iPhone")
+            
     }
 }
