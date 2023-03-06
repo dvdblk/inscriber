@@ -9,14 +9,14 @@ import SwiftUI
 import PencilKit
 
 struct PKCanvasRepresentation: UIViewRepresentable {
-    let strokeChangedAction: ((PKDrawing) -> Void)
+    let strokeChangedAction: ((CustomCanvasView) -> Void)
     
     @Binding var canUndo: Bool
     @Binding var canRedo: Bool
     @Binding var drawWithTouch: Bool
     @Binding var penWidth: PenWidth
     
-    init(canUndo: Binding<Bool>, canRedo: Binding<Bool>, drawWithTouch: Binding<Bool>, penWidth: Binding<PenWidth>, strokeChangedAction: @escaping ((PKDrawing) -> Void)) {
+    init(canUndo: Binding<Bool>, canRedo: Binding<Bool>, drawWithTouch: Binding<Bool>, penWidth: Binding<PenWidth>, strokeChangedAction: @escaping ((CustomCanvasView) -> Void)) {
         self._canUndo = canUndo
         self._canRedo = canRedo
         self._drawWithTouch = drawWithTouch
@@ -34,9 +34,7 @@ struct PKCanvasRepresentation: UIViewRepresentable {
         canvasView.drawingPolicy = drawWithTouch ? .anyInput : .pencilOnly
         canvasView.tool = makeDefaultTool(width: penWidth)
         canvasView.onTouchesMoved = {
-            strokeChangedAction(canvasView.drawing)
-            //print(canvasView.)
-            // FIXME: collect PKStroke in canvasView touchesMoved
+            strokeChangedAction(canvasView)
         }
         return canvasView
     }
@@ -65,6 +63,7 @@ struct PKCanvasRepresentation: UIViewRepresentable {
                 parent.canUndo = undoManager.canUndo && !strokes.isEmpty
                 parent.canRedo = undoManager.canRedo
             }
+            lastCgImage
         }
     }
 }

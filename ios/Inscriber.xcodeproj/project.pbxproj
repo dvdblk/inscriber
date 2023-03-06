@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8905FC2F29B5FF7400EFA6EE /* MySquareTriangleClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8905FC2E29B5FF7300EFA6EE /* MySquareTriangleClassifier.mlmodel */; };
+		8905FC3229B63ACA00EFA6EE /* ActiveStrokeContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8905FC3129B63ACA00EFA6EE /* ActiveStrokeContext.swift */; };
 		894CBB4E29B3826800EBD6DD /* InscriberApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB4D29B3826800EBD6DD /* InscriberApp.swift */; };
 		894CBB5229B3826800EBD6DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 894CBB5129B3826800EBD6DD /* Assets.xcassets */; };
 		894CBB5529B3826800EBD6DD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 894CBB5429B3826800EBD6DD /* Preview Assets.xcassets */; };
@@ -15,7 +17,7 @@
 		894CBB6329B4A9F500EBD6DD /* UndoRedoObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB6229B4A9F500EBD6DD /* UndoRedoObserver.swift */; };
 		894CBB6729B4EB7600EBD6DD /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB6629B4EB7600EBD6DD /* Drawing.swift */; };
 		894CBB6D29B4F54200EBD6DD /* CustomCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB6C29B4F54200EBD6DD /* CustomCanvasView.swift */; };
-		894CBB7329B4FB6900EBD6DD /* MLModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB7229B4FB6900EBD6DD /* MLModel.swift */; };
+		894CBB7329B4FB6900EBD6DD /* PredictionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB7229B4FB6900EBD6DD /* PredictionManager.swift */; };
 		894CBB7529B4FF5900EBD6DD /* RecognizedShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB7429B4FF5900EBD6DD /* RecognizedShape.swift */; };
 		894CBB7729B4FF7900EBD6DD /* Prediction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB7629B4FF7900EBD6DD /* Prediction.swift */; };
 		894CBB7929B539BE00EBD6DD /* CGMathExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894CBB7829B539BE00EBD6DD /* CGMathExtensions.swift */; };
@@ -24,6 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8905FC2E29B5FF7300EFA6EE /* MySquareTriangleClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = MySquareTriangleClassifier.mlmodel; path = "../../../../ml/turicreate-cnn/models/MySquareTriangleClassifier.mlmodel"; sourceTree = "<group>"; };
+		8905FC3129B63ACA00EFA6EE /* ActiveStrokeContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveStrokeContext.swift; sourceTree = "<group>"; };
 		894CBB4A29B3826800EBD6DD /* Inscriber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inscriber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		894CBB4D29B3826800EBD6DD /* InscriberApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriberApp.swift; sourceTree = "<group>"; };
 		894CBB5129B3826800EBD6DD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -33,7 +37,7 @@
 		894CBB6229B4A9F500EBD6DD /* UndoRedoObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoRedoObserver.swift; sourceTree = "<group>"; };
 		894CBB6629B4EB7600EBD6DD /* Drawing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drawing.swift; sourceTree = "<group>"; };
 		894CBB6C29B4F54200EBD6DD /* CustomCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCanvasView.swift; sourceTree = "<group>"; };
-		894CBB7229B4FB6900EBD6DD /* MLModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLModel.swift; sourceTree = "<group>"; };
+		894CBB7229B4FB6900EBD6DD /* PredictionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionManager.swift; sourceTree = "<group>"; };
 		894CBB7429B4FF5900EBD6DD /* RecognizedShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizedShape.swift; sourceTree = "<group>"; };
 		894CBB7629B4FF7900EBD6DD /* Prediction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prediction.swift; sourceTree = "<group>"; };
 		894CBB7829B539BE00EBD6DD /* CGMathExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGMathExtensions.swift; sourceTree = "<group>"; };
@@ -52,6 +56,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8905FC2629B5FC1100EFA6EE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8905FC2729B5FC1D00EFA6EE /* Models */,
+				894CBB5129B3826800EBD6DD /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		8905FC2729B5FC1D00EFA6EE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8905FC2E29B5FF7300EFA6EE /* MySquareTriangleClassifier.mlmodel */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8905FC3029B6079900EFA6EE /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				894CBB7829B539BE00EBD6DD /* CGMathExtensions.swift */,
+				894CBB7A29B564BB00EBD6DD /* UIDevice+userInterface.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		894CBB4129B3826800EBD6DD = {
 			isa = PBXGroup;
 			children = (
@@ -73,7 +103,7 @@
 			children = (
 				894CBB5D29B38BA700EBD6DD /* Drawing */,
 				894CBB4D29B3826800EBD6DD /* InscriberApp.swift */,
-				894CBB5129B3826800EBD6DD /* Assets.xcassets */,
+				8905FC2629B5FC1100EFA6EE /* Resources */,
 				894CBB5329B3826800EBD6DD /* Preview Content */,
 			);
 			path = Inscriber;
@@ -92,8 +122,7 @@
 			children = (
 				894CBB6529B4AE5800EBD6DD /* View */,
 				894CBB6429B4AE5000EBD6DD /* Model */,
-				894CBB7829B539BE00EBD6DD /* CGMathExtensions.swift */,
-				894CBB7A29B564BB00EBD6DD /* UIDevice+userInterface.swift */,
+				8905FC3029B6079900EFA6EE /* Extension */,
 			);
 			path = Drawing;
 			sourceTree = "<group>";
@@ -101,10 +130,11 @@
 		894CBB6429B4AE5000EBD6DD /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				8905FC3129B63ACA00EFA6EE /* ActiveStrokeContext.swift */,
 				894CBB6229B4A9F500EBD6DD /* UndoRedoObserver.swift */,
 				894CBB6629B4EB7600EBD6DD /* Drawing.swift */,
 				894CBB7429B4FF5900EBD6DD /* RecognizedShape.swift */,
-				894CBB7229B4FB6900EBD6DD /* MLModel.swift */,
+				894CBB7229B4FB6900EBD6DD /* PredictionManager.swift */,
 				894CBB7629B4FF7900EBD6DD /* Prediction.swift */,
 				894CBB7C29B570D900EBD6DD /* PenWidth.swift */,
 			);
@@ -191,15 +221,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				894CBB7329B4FB6900EBD6DD /* MLModel.swift in Sources */,
+				894CBB7329B4FB6900EBD6DD /* PredictionManager.swift in Sources */,
 				894CBB5C29B3843300EBD6DD /* DrawingView.swift in Sources */,
 				894CBB7729B4FF7900EBD6DD /* Prediction.swift in Sources */,
 				894CBB6329B4A9F500EBD6DD /* UndoRedoObserver.swift in Sources */,
 				894CBB7529B4FF5900EBD6DD /* RecognizedShape.swift in Sources */,
 				894CBB5F29B38BB600EBD6DD /* PKCanvasRepresentation.swift in Sources */,
 				894CBB4E29B3826800EBD6DD /* InscriberApp.swift in Sources */,
+				8905FC3229B63ACA00EFA6EE /* ActiveStrokeContext.swift in Sources */,
 				894CBB7929B539BE00EBD6DD /* CGMathExtensions.swift in Sources */,
 				894CBB7D29B570D900EBD6DD /* PenWidth.swift in Sources */,
+				8905FC2F29B5FF7400EFA6EE /* MySquareTriangleClassifier.mlmodel in Sources */,
 				894CBB7B29B564BB00EBD6DD /* UIDevice+userInterface.swift in Sources */,
 				894CBB6729B4EB7600EBD6DD /* Drawing.swift in Sources */,
 				894CBB6D29B4F54200EBD6DD /* CustomCanvasView.swift in Sources */,

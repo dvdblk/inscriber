@@ -7,7 +7,9 @@
 
 import Foundation
 import CoreGraphics
+import PencilKit
 
+/// Rasterization to a normalized 28x28 CGImage for single or multiple `PKStroke` can be done via this class.
 /// https://apple.github.io/turicreate/docs/userguide/drawing_classifier/export-coreml.html#using-stroke-based-drawing-input
 class Drawing {
     var drawing: NSMutableArray
@@ -63,19 +65,19 @@ class Drawing {
     }
     
     
-    func normalize(drawing D:Drawing) -> Drawing {
+    func normalized() -> Drawing {
         let new_drawing = Drawing()
-        for i in 0..<D.strokeCount() {
-            for j in 0..<D.pointCount(stroke: i) {
-                let current_point = D.point(stroke: i, point: j)
+        for i in 0..<self.strokeCount() {
+            for j in 0..<self.pointCount(stroke: i) {
+                let current_point = point(stroke: i, point: j)
                 var new_x, new_y : CGFloat
-                if (D.max_x == D.min_x) {new_x = D.min_x}
+                if (max_x == min_x) {new_x = min_x}
                 else {
-                    new_x = (current_point.x - D.min_x) * 255.0 / (D.max_x - D.min_x)
+                    new_x = (current_point.x - min_x) * 255.0 / (max_x - min_x)
                 }
-                if (D.max_y == D.min_y) {new_y = D.min_y}
+                if (max_y == min_y) {new_y = min_y}
                 else {
-                    new_y = (current_point.y - D.min_y) * 255.0 / (D.max_y - D.min_y)
+                    new_y = (current_point.y - min_y) * 255.0 / (max_y - min_y)
                 }
                 let new_point = CGPoint(x: new_x, y: new_y)
                 new_drawing.add(point: new_point)
@@ -85,8 +87,8 @@ class Drawing {
         return new_drawing
     }
 
-    func rasterize(drawing stroke_based_drawing:Drawing) -> CGImage {
-        let D = normalize(drawing: stroke_based_drawing)
+    func rasterized() -> CGImage {
+        let D = self.normalized()
         let grayscale = CGColorSpaceCreateDeviceGray()
         let intermediate_bitmap_context = CGContext(
             data:nil, width:256, height:256, bitsPerComponent:8, bytesPerRow:0,
@@ -115,5 +117,18 @@ class Drawing {
         let final_rect = CGRect(x: 0.0, y: 0.0, width: 28.0, height: 28.0)
         final_bitmap_context?.draw(intermediate_image!, in: final_rect)
         return (final_bitmap_context?.makeImage())!
+    }
+}
+
+extension PKStroke {
+    var toDrawing: Drawing {
+        let drawing = Drawing()
+        
+        for point in path {
+            drawing.add(point: point.location)
+        }
+        drawing.endStroke()
+        
+        return drawing
     }
 }

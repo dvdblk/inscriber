@@ -2,7 +2,7 @@
 
 Online on-device handwritten shape recognition.
 
-The app performs shape recognition during and based on the *current* stroke. Whenever the model detects a known shape a preview of it is shown to the user (just like the official Notes app).
+The app performs shape recognition based on the *current* stroke in progress. Whenever the model detects a known shape a preview of it is shown to the user (mimics the official Notes app).
 
 ## Features
 * Recognize primitive shapes (such as 🔺, 🟥, 🔴, ...)

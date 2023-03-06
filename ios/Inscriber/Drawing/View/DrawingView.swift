@@ -13,7 +13,7 @@ struct DrawingView: View {
     @State private var drawWithTouch = !UIDevice.interfaceIsPad
     @State private var penWidth = PenWidth.normal
     @StateObject private var undoRedoObserver = UndoRedoObserver()
-    @StateObject private var predictionModel = MLModel()
+    @StateObject private var predictionManager = PredictionManager()
     
     var body: some View {
         VStack {
@@ -22,9 +22,15 @@ struct DrawingView: View {
                 canRedo: $undoRedoObserver.canRedo,
                 drawWithTouch: $drawWithTouch,
                 penWidth: $penWidth
-            ) { drawing in
+            ) { canvasView in
                 // 1. Predict
-                //predictionModel.predict()
+//                predictionManager.predict(
+//                    stroke: canvasView.stroke,
+//                    completion: { _ in
+//                        print("completed")
+//                    }
+//                )
+                
                 
                 // 2. Update drawing based on prediction
             }
@@ -93,8 +99,8 @@ struct DrawingView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Menu {
-                    Picker("Prediction Model", selection: $predictionModel.modelType) {
-                        ForEach(MLModel.ModelType.allCases) { model in
+                    Picker("Prediction Model", selection: $predictionManager.modelType) {
+                        ForEach(PredictionManager.ModelType.allCases) { model in
                             Text(model.rawValue).tag(model)
                         }
                     }
