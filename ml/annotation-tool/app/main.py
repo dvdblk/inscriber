@@ -1,6 +1,7 @@
 import sys
 
 from app.controller import MainContoller, MenuController
+from app.model import Model
 from app.view import MainView
 from app.window import MainWindow
 from PyQt6.QtWidgets import QApplication
@@ -11,9 +12,9 @@ if __name__ == "__main__":
     window = MainWindow()
     menu_controller = MenuController(window, app)
 
-    # model = Model()
+    model = Model()
     view = MainView()
-    controller = MainContoller(None, view, menu_controller=menu_controller)
+    controller = MainContoller(model, view, menu_controller=menu_controller)
 
     window.setCentralWidget(view)
 

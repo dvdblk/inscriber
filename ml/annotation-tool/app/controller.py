@@ -1,8 +1,11 @@
+import json
 import sys
 
-from PyQt6.QtCore import QObject, Qt, pyqtSignal
+from app.model import LabelledInstance
+from app.view import MainView
+from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QAction, QKeySequence
-from PyQt6.QtWidgets import QFileDialog, QLabel, QMainWindow
+from PyQt6.QtWidgets import QFileDialog
 
 
 class MenuController(QObject):
@@ -20,6 +23,7 @@ class MenuController(QObject):
         self._create_menu_bar()
 
     def _create_actions(self):
+        """Create actions for the menu bar."""
         self.open_action = QAction("&Open", self.main_window)
         self.open_action.setShortcut(QKeySequence("Ctrl+o"))
         self.open_action.triggered.connect(self.show_file_dialog)
@@ -30,6 +34,7 @@ class MenuController(QObject):
         self.about_action = QAction("About", self.main_window)
 
     def _create_menu_bar(self):
+        """Create the menu bar and add actions to it."""
         menu_bar = self.main_window.menuBar()
 
         # Open
@@ -46,6 +51,7 @@ class MenuController(QObject):
             menu_bar.setNativeMenuBar(False)
 
     def show_file_dialog(self):
+        """Show a system file dialog to open a JSON file and emit a signal with the file path."""
         file_dialog = QFileDialog()
         selected_file_path, _ = file_dialog.getOpenFileName(
             self.main_window,
@@ -60,12 +66,43 @@ class MenuController(QObject):
 
 
 class MainContoller:
-    def __init__(self, model, view, menu_controller) -> None:
+    def __init__(self, model, view: MainView, menu_controller) -> None:
         self.model = model
         self.view = view
         self.menu_controller = menu_controller
 
+        # Connect file open signal
         self.menu_controller.file_opened.connect(self.handle_file_opened)
 
+        # Selection sync
+        self.view.unlabelled_list_view.clicked.connect(self.did_click_unlabelled_list)
+        self.view.labelled_list_view.clicked.connect(self.did_click_labelled_list)
+
+        # Button click
+        self.view.selected_instance_button.clicked.connect(self.did_click_add_to_labelled)
+
     def handle_file_opened(self, file_path: str):
-        print(f"File opened: {file_path}")
+        """Handle the opening of a JSON file path."""
+
+        # load json data from file
+        with open(file_path, "r", encoding="utf-8") as file:
+            quickdraw_data = json.load(file)
+
+        # update unlabelled list view model
+        self.model.update_data(quickdraw_data)
+        self.view.update_lists(self.model.unlabelled_list_model, self.model.labelled_list_model)
+
+    def did_click_unlabelled_list(self, index):
+        self.view.labelled_list_view.selectionModel().clearSelection()
+        self.model.update_selected_instance(index, labelled=False)
+        self.view.update_selected_instance(self.model.selected_instance)
+
+    def did_click_labelled_list(self, index):
+        self.view.unlabelled_list_view.selectionModel().clearSelection()
+        self.model.update_selected_instance(index, labelled=True)
+        self.view.update_selected_instance(self.model.selected_instance)
+
+    def did_click_add_to_labelled(self):
+        instance = LabelledInstance(**self.model.selected_instance.__dict__, points=[])
+        self.model.labelled_list_model.add_instance(instance)
+        self.view.update_lists(self.model.unlabelled_list_model, self.model.labelled_list_model)
