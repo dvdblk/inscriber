@@ -13,6 +13,7 @@ class MenuController(QObject):
 
     file_opened = pyqtSignal(str)
     """Signal to notify the opening of a JSON file."""
+    export_initiated = pyqtSignal()
 
     def __init__(self, main_window, app):
         super().__init__()
@@ -30,6 +31,7 @@ class MenuController(QObject):
 
         self.export_action = QAction("&Export", self.main_window)
         self.export_action.setShortcut(QKeySequence("Ctrl+e"))
+        self.export_action.triggered.connect(self.export_initiated.emit)
 
         self.about_action = QAction("About", self.main_window)
 
@@ -71,8 +73,9 @@ class MainContoller:
         self.view = view
         self.menu_controller = menu_controller
 
-        # Connect file open signal
+        # Connect file open and export signals
         self.menu_controller.file_opened.connect(self.handle_file_opened)
+        self.menu_controller.export_initiated.connect(self.handle_export_initiated)
 
         # Selection sync
         self.view.unlabelled_list_view.clicked.connect(self.did_click_unlabelled_list)
@@ -94,6 +97,41 @@ class MainContoller:
         # update unlabelled list view model
         self.model.update_data(quickdraw_data)
         self.view.update_lists(self.model.unlabelled_list_model, self.model.labelled_list_model)
+
+    def handle_export_initiated(self):
+        """Handle the initiation of the export process."""
+        # First check if there are any labelled instances to export
+        if self.model.labelled_list_model.rowCount() == 0:
+            return
+
+        # Prepare the JSON data
+        data = []
+        for i in range(self.model.labelled_list_model.rowCount()):
+            instance = self.model.labelled_list_model.data(
+                self.model.labelled_list_model.index(i, 0)
+            )
+            data.append(
+                {
+                    "label": instance.label,
+                    "key": instance.key,
+                    "drawing": instance.drawing,
+                    "points": instance.points,
+                }
+            )
+
+        # Show the file dialog
+        file_dialog = QFileDialog()
+        selected_file_path, _ = file_dialog.getSaveFileName(
+            self.view,
+            "Save File",
+            "",
+            "JSON (*.json)",
+        )
+
+        # Export the data
+        if selected_file_path:
+            with open(selected_file_path, "w", encoding="utf-8") as file:
+                json.dump(data, file, ensure_ascii=False, indent=4)
 
     def did_click_unlabelled_list(self, index):
         self.view.labelled_list_view.selectionModel().clearSelection()

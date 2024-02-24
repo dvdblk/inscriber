@@ -62,7 +62,7 @@ class UnlabelledListModel(QAbstractListModel):
         super().__init__(parent)
         self._data = data
 
-    def data(self, index, role):
+    def data(self, index, role=None):
         if role == Qt.ItemDataRole.DisplayRole:
             instance = self._data[index.row()]
             return f"{instance.label} ({instance.key[:16]}...)"
@@ -85,7 +85,7 @@ class LabelledListModel(QAbstractListModel):
         super().__init__(parent)
         self._data = data
 
-    def data(self, index, role):
+    def data(self, index, role=None):
         if role == Qt.ItemDataRole.DisplayRole:
             instance = self._data[index.row()]
             return f"{instance.label} ({len(instance.points)} pts, {instance.key[:16]}...))"
