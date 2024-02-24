@@ -103,6 +103,32 @@ class MainContoller:
         self.view.update_selected_instance(self.model.selected_instance)
 
     def did_click_add_to_labelled(self):
-        instance = LabelledInstance(**self.model.selected_instance.__dict__, points=[])
+        """Handle click on the add to labelled button.
+
+        Note:
+            - Get the points from the selected instance view
+            - Create a new labelled instance with the points
+            - Add the new instance to the labelled list model
+            - Remove the instance from the unlabelled list model
+            - Select the next instance in the unlabelled list model
+        """
+        points = self.view.selected_instance_view.points
+        instance = LabelledInstance(**self.model.selected_instance.__dict__, points=points)
         self.model.labelled_list_model.add_instance(instance)
+        self.model.unlabelled_list_model.remove_instance(self.model.selected_instance)
         self.view.update_lists(self.model.unlabelled_list_model, self.model.labelled_list_model)
+
+        # If there are more unlabelled instances
+        if self.model.unlabelled_list_model.rowCount() > 0:
+            cur_index = self.view.unlabelled_list_view.currentIndex()
+            # bump cur_index to the next instance if it's not the last one
+            if cur_index.row() < self.model.unlabelled_list_model.rowCount() - 1:
+                pass  # do nothing
+            else:
+                # select the first instance if it's the last one
+                self.view.unlabelled_list_view.setCurrentIndex(
+                    self.model.unlabelled_list_model.index(0, 0)
+                )
+
+            self.model.update_selected_instance(self.view.unlabelled_list_view.currentIndex())
+            self.view.update_selected_instance(self.model.selected_instance)

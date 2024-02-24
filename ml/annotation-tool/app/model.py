@@ -69,8 +69,13 @@ class UnlabelledListModel(QAbstractListModel):
         elif role is None:
             return self._data[index.row()]
 
-    def rowCount(self, index):
+    def rowCount(self, index=None):
         return len(self._data)
+
+    def remove_instance(self, instance: QuickDrawInstance):
+        """Remove a QuickDrawInstance from the model."""
+        self._data.remove(instance)
+        self.layoutChanged.emit()
 
 
 class LabelledListModel(QAbstractListModel):
@@ -80,10 +85,6 @@ class LabelledListModel(QAbstractListModel):
         super().__init__(parent)
         self._data = data
 
-    def add_instance(self, instance: LabelledInstance):
-        self._data.append(instance)
-        self.layoutChanged.emit()
-
     def data(self, index, role):
         if role == Qt.ItemDataRole.DisplayRole:
             instance = self._data[index.row()]
@@ -91,5 +92,10 @@ class LabelledListModel(QAbstractListModel):
         elif role is None:
             return self._data[index.row()]
 
-    def rowCount(self, index):
+    def rowCount(self, index=None):
         return len(self._data)
+
+    def add_instance(self, instance: LabelledInstance):
+        """Add a new LabelledInstance to the model."""
+        self._data.append(instance)
+        self.layoutChanged.emit()

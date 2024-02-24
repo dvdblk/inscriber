@@ -17,7 +17,7 @@ class SelectedInstanceView(QWidget):
     View for drawing the selected instance.
     """
 
-    CIRCLE_RADIUS = 16
+    CIRCLE_RADIUS = 12
 
     def __init__(self):
         super().__init__()
@@ -68,7 +68,7 @@ class SelectedInstanceView(QWidget):
         self.update()
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton and self.drawing_data is not None:
             # Add a circle on left-click
             self.add_circle(event.pos())
 
@@ -146,7 +146,7 @@ class MainView(QWidget):
 
     def update_selected_instance(self, instance):
         """Update the selected instance view."""
-        if isinstance(instance, QuickDrawInstance):
-            self.selected_instance_view.update_drawing(instance.drawing)
-        elif isinstance(instance, LabelledInstance):
+        if isinstance(instance, LabelledInstance):
             self.selected_instance_view.update_drawing(instance.drawing, points=instance.points)
+        elif isinstance(instance, QuickDrawInstance):
+            self.selected_instance_view.update_drawing(instance.drawing)
