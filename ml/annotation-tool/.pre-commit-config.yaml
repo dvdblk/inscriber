@@ -15,4 +15,4 @@ repos:
     rev: 23.3.0
     hooks:
       - id: black
-        args: [ "--target-version", "py311", "--config", "pyproject.toml" ]
+        args: [ "--target-version", "py311", "--config", "ml/annotation-tool/pyproject.toml" ]
