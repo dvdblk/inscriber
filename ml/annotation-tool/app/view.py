@@ -38,21 +38,30 @@ class MainView(QWidget):
 
         unlabelled_vbox_layout = QVBoxLayout()
         unlabelled_vbox_layout.addWidget(QLabel("Unlabelled instances"))
-        unlabelled_vbox_layout.addWidget(QListView())
+        unlabelled_list_view = QListView()
+        unlabelled_list_view.setMaximumWidth(256)
+        unlabelled_vbox_layout.addWidget(unlabelled_list_view)
 
         label_vertical_layout = QVBoxLayout()
         draw_widget = DrawWidget()
         label_vertical_layout.addWidget(draw_widget)
-        label_vertical_layout.addWidget(QLabel("Selected instance label:"))
-        label_vertical_layout.addWidget(QLineEdit())
-        label_vertical_layout.addWidget(QPushButton("Add instance label"))
+        label_vertical_widgets = [
+            QLabel("Selected instance label:"),
+            QLineEdit(),
+            QPushButton("Add instance label"),
+        ]
+        for widget in label_vertical_widgets:
+            widget.setMaximumWidth(256)
+            label_vertical_layout.addWidget(widget)
         label_vertical_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         label_vertical_layout.setAlignment(draw_widget, Qt.AlignmentFlag.AlignCenter)
         label_vertical_layout.setContentsMargins(0, 24, 0, 0)
 
         labelled_vbox_layout = QVBoxLayout()
         labelled_vbox_layout.addWidget(QLabel("Labelled instances"))
-        labelled_vbox_layout.addWidget(QListView())
+        labelled_list_view = QListView()
+        labelled_list_view.setMaximumWidth(256)
+        labelled_vbox_layout.addWidget(labelled_list_view)
 
         main_horizontal_layout.addLayout(unlabelled_vbox_layout)
         main_horizontal_layout.addLayout(label_vertical_layout)

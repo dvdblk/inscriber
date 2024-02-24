@@ -12,14 +12,6 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Inscriber annotation tool")
-        self.resize(400, 200)
-        lbl = QLabel("UwU")
-        font = QFont()
-        font.setPointSize(32)
-        lbl.setFont(font)
-
-        self.central_widget = lbl
-        self.central_widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.setCentralWidget(self.central_widget)
+        self.resize(756, 340)
 
         self.show()
