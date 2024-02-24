@@ -121,6 +121,7 @@ class MainView(QWidget):
         self.selected_instance_view = SelectedInstanceView()
         selected_instance_label = QLabel("Selected instance")
         self.selected_instance_button = QPushButton("Add to labelled")
+        self.selected_instance_button.setShortcut("Ctrl+a")
         self.selected_instance_button.setEnabled(False)
         self.selected_instance_button.setMaximumWidth(256)
         points_label_view = QTextEdit()
