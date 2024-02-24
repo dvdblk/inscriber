@@ -55,47 +55,51 @@ class Model:
         self.selected_instance = instance
 
 
-class UnlabelledListModel(QAbstractListModel):
-    """Model for the list view of unlabelled instances."""
+class BaseListModel(QAbstractListModel):
+    """Base class for list models."""
 
     def __init__(self, data, parent=None):
         super().__init__(parent)
         self._data = data
+
+    def data(self, index, role=None):
+        if role == Qt.ItemDataRole.DisplayRole:
+            return self._data[index.row()]
+        elif role is None:
+            return self._data[index.row()]
+
+    def rowCount(self, index=None):
+        return len(self._data)
+
+    def add_instance(self, instance):
+        """Add a new instance to the model."""
+        self._data.append(instance)
+        self.layoutChanged.emit()
+
+    def remove_instance(self, instance):
+        """Remove an instance from the model."""
+        if instance in self._data:
+            self._data.remove(instance)
+            self.layoutChanged.emit()
+
+
+class UnlabelledListModel(BaseListModel):
+    """Model for the list view of unlabelled instances."""
 
     def data(self, index, role=None):
         if role == Qt.ItemDataRole.DisplayRole:
             instance = self._data[index.row()]
             return f"{instance.label} ({instance.key[:16]}...)"
-        elif role is None:
-            return self._data[index.row()]
-
-    def rowCount(self, index=None):
-        return len(self._data)
-
-    def remove_instance(self, instance: QuickDrawInstance):
-        """Remove a QuickDrawInstance from the model."""
-        self._data.remove(instance)
-        self.layoutChanged.emit()
+        else:
+            return super().data(index, role)
 
 
-class LabelledListModel(QAbstractListModel):
+class LabelledListModel(BaseListModel):
     """Model for the list view of labelled instances."""
-
-    def __init__(self, data, parent=None):
-        super().__init__(parent)
-        self._data = data
 
     def data(self, index, role=None):
         if role == Qt.ItemDataRole.DisplayRole:
             instance = self._data[index.row()]
             return f"{instance.label} ({len(instance.points)} pts, {instance.key[:16]}...))"
-        elif role is None:
-            return self._data[index.row()]
-
-    def rowCount(self, index=None):
-        return len(self._data)
-
-    def add_instance(self, instance: LabelledInstance):
-        """Add a new LabelledInstance to the model."""
-        self._data.append(instance)
-        self.layoutChanged.emit()
+        else:
+            return super().data(index, role)

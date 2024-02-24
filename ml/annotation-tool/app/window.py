@@ -12,6 +12,6 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Inscriber annotation tool")
-        self.resize(1024, 512)
+        self.resize(1024, 756)
 
         self.show()

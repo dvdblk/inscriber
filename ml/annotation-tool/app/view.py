@@ -164,6 +164,7 @@ class MainView(QWidget):
         labelled_vbox_layout = QVBoxLayout()
         labelled_vbox_layout.addWidget(QLabel("Labelled instances"))
         labelled_list_view = QListView()
+        labelled_list_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         labelled_list_view.setMaximumWidth(256)
         labelled_vbox_layout.addWidget(labelled_list_view)
         self.labelled_list_view = labelled_list_view

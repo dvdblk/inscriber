@@ -1,11 +1,11 @@
 import json
 import sys
 
-from app.model import LabelledInstance
+from app.model import LabelledInstance, QuickDrawInstance
 from app.view import MainView
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QAction, QKeySequence
-from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtWidgets import QFileDialog, QMenu
 
 
 class MenuController(QObject):
@@ -81,8 +81,13 @@ class MainContoller:
         self.view.unlabelled_list_view.clicked.connect(self.did_click_unlabelled_list)
         self.view.labelled_list_view.clicked.connect(self.did_click_labelled_list)
 
-        # Button click
+        # 'Add label' Button click
         self.view.selected_instance_button.clicked.connect(self.did_click_add_to_labelled)
+
+        # Remove label from labelled list context menu
+        self.view.labelled_list_view.customContextMenuRequested.connect(
+            self.did_right_click_labelled_list
+        )
 
         # Connect points changed signal
         self.view.selected_instance_view.points_changed.connect(self.did_change_points)
@@ -142,6 +147,25 @@ class MainContoller:
         self.view.unlabelled_list_view.selectionModel().clearSelection()
         self.model.update_selected_instance(index, labelled=True)
         self.view.update_selected_instance(self.model.selected_instance)
+
+    def did_right_click_labelled_list(self, event):
+        index = self.view.labelled_list_view.indexAt(event)
+        if index.isValid():
+            menu = QMenu(self.view)
+            unlabel_action = menu.addAction("Unlabel")
+            action = menu.exec(self.view.labelled_list_view.mapToGlobal(event))
+
+            if action == unlabel_action:
+                unlabelled_instance = QuickDrawInstance(
+                    label=self.model.selected_instance.label,
+                    key=self.model.selected_instance.key,
+                    drawing=self.model.selected_instance.drawing,
+                )
+                self.model.unlabelled_list_model.add_instance(unlabelled_instance)
+                self.model.labelled_list_model.remove_instance(self.model.selected_instance)
+                self.view.update_lists(
+                    self.model.unlabelled_list_model, self.model.labelled_list_model
+                )
 
     def did_change_points(self, points):
         # Update the points if this is a labelled instance
