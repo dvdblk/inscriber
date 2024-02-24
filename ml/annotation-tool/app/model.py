@@ -88,7 +88,7 @@ class LabelledListModel(QAbstractListModel):
     def data(self, index, role):
         if role == Qt.ItemDataRole.DisplayRole:
             instance = self._data[index.row()]
-            return f"{instance.key} ({instance.label}, {len(instance.points)})"
+            return f"{instance.label} ({len(instance.points)} pts, {instance.key[:16]}...))"
         elif role is None:
             return self._data[index.row()]
 

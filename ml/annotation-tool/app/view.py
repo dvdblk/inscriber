@@ -1,12 +1,12 @@
 from app.model import LabelledInstance, QuickDrawInstance
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QBrush, QColor, QPainter, QPen
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QBrush, QColor, QPainter, QPalette, QPen
 from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
-    QLineEdit,
     QListView,
     QPushButton,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -18,6 +18,9 @@ class SelectedInstanceView(QWidget):
     """
 
     CIRCLE_RADIUS = 12
+    """The radius of the circles representing the points."""
+
+    points_changed = pyqtSignal(list)
 
     def __init__(self):
         super().__init__()
@@ -65,6 +68,8 @@ class SelectedInstanceView(QWidget):
     def update_drawing(self, drawing, points=None):
         self.drawing_data = drawing
         self.points = points or []
+        self.points_changed.emit(self.points)
+
         self.update()
 
     def mousePressEvent(self, event):
@@ -80,6 +85,9 @@ class SelectedInstanceView(QWidget):
         # Add the circle information to the list
         self.points.append((pos.x(), pos.y()))
 
+        # Emit the points changed signal
+        self.points_changed.emit(self.points)
+
         # Trigger a redraw
         self.update()
 
@@ -91,6 +99,7 @@ class SelectedInstanceView(QWidget):
             distance = ((pos.x() - x) ** 2 + (pos.y() - y) ** 2) ** 0.5
             if distance <= radius:
                 self.points.remove(circle)
+                self.points_changed.emit(self.points)
                 self.update()
                 break
 
@@ -112,20 +121,44 @@ class MainView(QWidget):
         self.selected_instance_view = SelectedInstanceView()
         selected_instance_label = QLabel("Selected instance")
         self.selected_instance_button = QPushButton("Add to labelled")
+        self.selected_instance_button.setEnabled(False)
+        self.selected_instance_button.setMaximumWidth(256)
+        points_label_view = QTextEdit()
+        points_label_view.setReadOnly(True)
+        points_label_view.setPlainText(
+            "Click on the drawing to add or remove points for labelling."
+        )
+        points_label_view.setCursorWidth(0)
+        self.points_label_view = points_label_view
+
         label_vertical_widgets = [
             selected_instance_label,
             self.selected_instance_view,
-            QLineEdit(),
+            points_label_view,
             self.selected_instance_button,
         ]
+        # Remove background and border
+        palette = QPalette()
+        palette.setColor(
+            QPalette.ColorRole.Window, QColor(0, 0, 0, 0)
+        )  # Set background color to transparent
+        palette.setColor(
+            QPalette.ColorRole.Base, QColor(0, 0, 0, 0)
+        )  # Set base color to transparent
+        points_label_view.setPalette(palette)
+        points_label_view.setStyleSheet("border: 0; background: transparent;")
+
         for widget in label_vertical_widgets:
-            widget.setMaximumWidth(256)
+            # widget.setMaximumWidth(256)
             label_vertical_layout.addWidget(widget)
         label_vertical_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         label_vertical_layout.setAlignment(
             self.selected_instance_view, Qt.AlignmentFlag.AlignCenter
         )
         label_vertical_layout.setAlignment(selected_instance_label, Qt.AlignmentFlag.AlignCenter)
+        label_vertical_layout.setAlignment(
+            self.selected_instance_button, Qt.AlignmentFlag.AlignCenter
+        )
 
         labelled_vbox_layout = QVBoxLayout()
         labelled_vbox_layout.addWidget(QLabel("Labelled instances"))

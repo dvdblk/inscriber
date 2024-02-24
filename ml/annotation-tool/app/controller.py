@@ -81,6 +81,9 @@ class MainContoller:
         # Button click
         self.view.selected_instance_button.clicked.connect(self.did_click_add_to_labelled)
 
+        # Connect points changed signal
+        self.view.selected_instance_view.points_changed.connect(self.did_change_points)
+
     def handle_file_opened(self, file_path: str):
         """Handle the opening of a JSON file path."""
 
@@ -101,6 +104,27 @@ class MainContoller:
         self.view.unlabelled_list_view.selectionModel().clearSelection()
         self.model.update_selected_instance(index, labelled=True)
         self.view.update_selected_instance(self.model.selected_instance)
+
+    def did_change_points(self, points):
+        # Update the points if this is a labelled instance
+        if isinstance(self.model.selected_instance, LabelledInstance):
+            self.model.selected_instance.points = points
+
+        # Update points label view
+        if len(points) > 0:
+            text = "Points (x, y):\n"
+            for i, point in enumerate(points):
+                text += f"\t{i+1}: ({point[0]}, {point[1]})\n"
+            self.view.points_label_view.setPlainText(text)
+        else:
+            self.view.points_label_view.setPlainText(
+                "Click on the drawing to add or remove points for labelling."
+            )
+
+        # Update availability of add to labelled button
+        self.view.selected_instance_button.setEnabled(
+            len(points) > 0 and not isinstance(self.model.selected_instance, LabelledInstance)
+        )
 
     def did_click_add_to_labelled(self):
         """Handle click on the add to labelled button.
