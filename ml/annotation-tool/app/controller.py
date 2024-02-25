@@ -5,7 +5,7 @@ from app.model import LabelledInstance, QuickDrawInstance
 from app.view import MainView
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QAction, QKeySequence
-from PyQt6.QtWidgets import QFileDialog, QMenu
+from PyQt6.QtWidgets import QFileDialog, QMenu, QMessageBox
 
 
 class MenuController(QObject):
@@ -34,6 +34,7 @@ class MenuController(QObject):
         self.export_action.triggered.connect(self.export_initiated.emit)
 
         self.about_action = QAction("About", self.main_window)
+        self.about_action.triggered.connect(self.show_about_dialog)
 
     def _create_menu_bar(self):
         """Create the menu bar and add actions to it."""
@@ -65,6 +66,16 @@ class MenuController(QObject):
         # emit signal
         if selected_file_path:
             self.file_opened.emit(selected_file_path)
+
+    def show_about_dialog(self):
+        """Show a simple about dialog."""
+        # show a dialog with the application name and version and the author
+        about_text = "Inscriber annotation tool\n\nAuthor: David Alex Bielik"
+
+        about_box = QMessageBox()
+        about_box.setWindowTitle("About")
+        about_box.setText(about_text)
+        about_box.exec()
 
 
 class MainContoller:
