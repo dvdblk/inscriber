@@ -3,7 +3,10 @@
 Turns a GoogleQuickDraw style dataset into a labelled dataset ready for training an Inscriber-style model. Annotates the sequences of strokes with:
 
 * label of the object drawn (e.g. 'circle', 'square', 'triangle', 'heart')
-* provides
+* a set of 2D points that represent the geometric shape of this instance
+
+
+<img src="annotation-tool-preview.png" width="40%" height="40%">
 
 ## Quick Start
 
